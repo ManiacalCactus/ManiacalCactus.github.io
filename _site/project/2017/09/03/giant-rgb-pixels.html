@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Welcome to Jekyll!</title>
+  <meta name="description" content="For my first project on this new blog i decided that what I make should be a learning experience for me as it would help me better convey what will become th...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/project/2017/09/03/giant-rgb-pixels.html">
+  <link rel="alternate" type="application/rss+xml" title="kopitsLabs" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">kopitsLabs</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Welcome to Jekyll!</h1>
+    <p class="post-meta">
+      <time datetime="2017-09-03T21:20:49-04:00" itemprop="datePublished">
+        
+        Sep 3, 2017
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>For my first project on this new blog i decided that what I make should be a learning experience for me as it would help me better convey what will become the general tone of this site.
+  Thusly, I decided that it was time I finally learn how to design and order pcbs.  I have been interested in hobby electronics for several years now, but the extent of my production has all been homebrew.  Such is why I decided I should create something which I can’t manufacture in my workshop, in this case because it would simply be too large of a task.  Since I wanted to focus on learning the process and not the electronics itself, I went with a super simple design, two leds on a board.  Naturally, I still wanted this to serve some purpose, so I decided I would make these boards modular and linkable using headers.  Below are my first sketches of the idea.
+  After the initial sketches, I took some time to formalize the design in Fritzing, software made for this purpose.  Although I have made efforts in the past to use Eagle to design pcbs, I have never been successful due largely to the arguably overly complex system and lack of sufficient resources.  So I settled for easier to use CAD tools.<br />
+  After creating the boards, I used Fritzing’s integrated service to order my pcbs.  Although I could probably have moved the production to China for much cheaper, I wanted the simplest possible experience for my first run of pcbs, so I want with Aisler.  The first time I uploaded my designs I placed to traces slightly too close to each other, which resulted in them being contiguous.  Luckily I caught this mistake before I spent 50 pounds and two weeks on non functional pcbs.
+  When the 15 boards came two weeks later I spent about 3 hours populating all of them with their leds and headers.  However, on my first test using three potentiometer outputs hookup up to the first three legs of the led and ground on the fourth, I could never get one color to show up, and changing the value of its respective potentiometer would dim the led as a whole.  After some debugging, I realized the reason for this was that when creating the boards I assumed that the farthest out leg would naturally be ground.  This however was not the case; the third and longest leg was ground, so the solution was simply swapping two inputs.
+  After testing, I began to write code to cycle through all of the possible colors.</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">;</span>
+<span class="kt">int</span> <span class="o">*</span><span class="n">current</span><span class="p">,</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">pinRed</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">pinGreen</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">pinBlue</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">maximum</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">delayAmt</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">red</span> <span class="o">=</span> <span class="n">maximum</span><span class="p">;</span>
+  <span class="n">green</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">blue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">current</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">red</span><span class="p">;</span>
+  <span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">green</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">next</span> <span class="o">&lt;</span> <span class="n">maximum</span><span class="p">){</span>
+    <span class="o">*</span><span class="n">next</span> <span class="o">=</span> <span class="o">*</span><span class="n">next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">current</span> <span class="o">=</span> <span class="o">*</span><span class="n">current</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">updateLED</span><span class="p">();</span>
+    <span class="n">delay</span><span class="p">(</span><span class="n">delayAmt</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">current</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">next</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">red</span><span class="p">){</span>
+    <span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">green</span><span class="p">;</span>
+  <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">next</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">green</span><span class="p">){</span>
+    <span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">blue</span><span class="p">;</span>  
+  <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">next</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">blue</span><span class="p">){</span>
+    <span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">red</span><span class="p">;</span>  
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">updateLED</span><span class="p">(){</span>
+  <span class="n">analogWrite</span><span class="p">(</span><span class="n">pinRed</span><span class="p">,</span> <span class="n">red</span><span class="p">);</span>
+  <span class="n">analogWrite</span><span class="p">(</span><span class="n">pinGreen</span><span class="p">,</span> <span class="n">green</span><span class="p">);</span>
+  <span class="n">analogWrite</span><span class="p">(</span><span class="n">pinBlue</span><span class="p">,</span> <span class="n">blue</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="n">delayAmt</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>However, I this code resulted in some very strange behavior: the led would increase wildly for the color green and oscillate while the color blue was much less than it should have been.  I initially assumed that this was an issue with my code, but even after working with a second revision the problem persisted.  I then assumed it was a problem with the leds, or perhaps an overcurrent issue.  However, after retrying the system using mosfets to deliver the power from a 9 volt, I ruled out overcurrent.  Some further research lead me, strangely enough, to color theory.</p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Absorption_Curves.JPG" alt="Color Absorption Curves" />
+  By Arturomoncadatorres (Own work) [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons</p>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">kopitsLabs</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              kopitsLabs
+            
+            </li>
+            
+            <li><a href="mailto:lkopits.extra@gmail.com">lkopits.extra@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/ManiacalCactus"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">ManiacalCactus</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Adventures in electronics, mechanics, software, and whatever other field catches my eye
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
