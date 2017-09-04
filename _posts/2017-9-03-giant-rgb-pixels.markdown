@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "Giant RGB LED Pixels"
 date:   2017-09-03 21:20:49 -0400
 categories: project
 ---
