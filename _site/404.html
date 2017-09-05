@@ -85,7 +85,27 @@
   <h1>404</h1>
 
   <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+  <p>The requested page could not be found. Here's a fun little project</p>
+  <canvas id="game" width="400" height="400" style="border:5px solid #000000;">
+  </canvas>
+  <script>
+    var canvas = document.getElementById("game");
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(0,0,150,75);
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+      };
+    }
+
+    //var position = getMousePos();
+    //console.log("test");
+
+  </script>
 </div>
 
       </div>

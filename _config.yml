@@ -26,6 +26,7 @@ markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+future: true
 
 excerpt_separator: "nfeaklnguioweahg8oaw8oehfgu8eowahf8h3w89apfhi3ohai"
 
