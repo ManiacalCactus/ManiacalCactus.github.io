@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "TDCS Experiments"
-date:   2017-09-017 21:20:49 -0400
+date:   2017-09-24 11:50:00 -0400
 categories: project
 ---
   I've had the idea of building a proper tDCS rig in the back of my mind since seventh grade.  That year, I had a science research project, and my first serious project idea was to attempt to perform and test the effects of tDCS on mice.  Unfortunately my instructor wisely decided that this would be too difficult of a project for a seventh grader, not even mentioning the ethical ramifications of testing a seventh grader's electronics project on living creatures.
