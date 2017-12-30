@@ -14,7 +14,7 @@ categories: project
   I then placed the back two mounts roughly where I wanted them on the car and then marked out holes to drill in the 2x4s.  This was necessary because the roof of my car is slightly convex, meaning that mounts attached flat to the 2x4s wouldn't have great contact with the roof of the car.  They had to be mounted at an angle which I didn't have the ability to measure, so I measured out the holes based on a fit.
   ![Completed bar](/assets/images/CarRack/FullMounts.jpg)
   To add increase the friction between the bottom of the mounts and the roof of my car, I covered them with liquid electrical tape, giving them a rubbery surface.
-  ![Bottom of mount](/assets/images/CarRack/MountBottom)
+  ![Bottom of mount](/assets/images/CarRack/MountBottom.jpg)
   To actually attach the bars to my car, I used existing straps through the top of the doors.
   ![Final assembly](/assets/images/CarRack/FinalAssembly.jpg)
   Before taking this out on the open road, I decided to attach a variety of load sizes and stress test my system in a parking lot.  Everything performed as well as I had hoped for.
