@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "Building an AI that plays Snake from scratch"
+date:   2018-06-25 12:00:00 -0400
+categories: project
+---
+  ### Abstract
+  I've had a two different goals with code for a while: learning golang and building and training a neural network from scratch.  This project was meant to solve both of those, by forcing me to quickly learn a new language and simultaneously build one of the abstract concepts from scratch.  My goal was to build the classic snake game and then train a program to play proficiently.
+  This project took far longer than I thought it would.  I started and finished the game itself and graphics that came with it over break and then was forced to stop for schoolwork.  I took the project back up at the beginning of June and I finished it by the end.
+  In order to not make this too long, I'm ignoring building the game itself and just discussing AI.
+  ![Name](/assets/images/snake-ai/game.jpg)
+  I had a general structure planned out.  First I would build a linear algebra library that allowed me to create and mutate matrices as well as run computations.  Then I would build a neural network structure which contained an array of matrices and could fill that array with the correct matrix sizes to allow for a given network structure.  Then I would build a wrapper for the neural network which ended up being somewhat unnecessary.  I have a Java background so the wrapper/object-oriented approach showed itself up in the code I wrote.  Finally I built a main package that would create a set of neural networks and then replace them with mutated versions of the highest performing one from the previous generation.  I stuck with a generational based learning technique simply because I don't have the calculus background necessary to implement gradient descent and understand it.
+  After tuning parameters, I managed to achieve a final fitness(calculated by time alive and points scored) increase from 511 in generation 0 to 14280 in generation 109, a 2794% increase in fitness.
+  My final code can be downloaded here
+  [final code](/assets/downloads/GoSnake.zip)
+
+  ### Network structure
+  I chose a relatively arbitrary network structure with three hidden layers in order to allow for a minimal but still significant amount of potential for abstraction.
+  ![Name](/assets/images/snake-ai/sketch.jpg)
+  I created six inputs: the distance to a threat down, up, left, and right and then the distance to the point tile on the board in the x and y dimensions.  I created a four node output vector representing down, up, left, and right.  The program found the maximum of these four values and moved the head of the snake in that direction.
+  I first set each weight value to a random number from -5 to 5 for the first generation.  Each subsequent generation was comprised of an instance of the most fit breed of the previous generation with each weight in the network multiplied by a random number calculated with 0 as an average and a standard distribution of 2.  These numbers were found by running many unsuccessful trials.
+
+  ### Training
+  My first thought for calculating fitness was simply the final score of the snake.  This proved to be an issue because the program had trouble initially scoring, so there was not enough data to train off of.  It tended to just instantly run into the wall.
+  My next thought was to train it to live as long as possible, so I calculated fitness as the sum of the score and total time spent alive.  Unfortunately, the program learned very quickly to just travel in an infinite loop.
+  Next, I decided to calculate fitness as the points achieved divided by the time alive in order to disincentivize infinite loops.  The program quickly learned to instantly lose in order to minimize the time alive and therefore maximize the score.
+  I finally succeeded by making the score the sum of the number of points multiplied by a factor and then added to the time spent alive.  I also had to create a maximum time to score ratio to stop the program from creating infinite loops.
+  One of the main issues I had was training time.  I attempted to run 30 breeds per generation and 100+ generations.  It took about 3 hours for a given training session.  Although this seemed reasonable at the time, I turned out I had a delay coded from when I was debugging the creation of the game itself.  Deleting the delay resulted in significantly faster training times by an order of magnitude.
